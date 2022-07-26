@@ -1,10 +1,10 @@
-
 ifeq ($(which_computer),theta)
   ifeq ($(USE_MPI),TRUE)
-    CC  = cc
-    CXX = CC
-    FC  = ftn
-    F90 = ftn
-    LIBRARIES += -lmpichf90
+    #CC  = cc
+    #CXX = CC
+    #FC  = ftn
+    #F90 = ftn
+    #LIBRARIES += -lmpi 
+    LIBRARIES += $(shell mpif90 -showme:link)
   endif
 endif

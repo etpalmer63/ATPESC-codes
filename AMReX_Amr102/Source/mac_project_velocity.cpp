@@ -1,13 +1,13 @@
-#include <AMReX_MacProjector.H>
+#include <hydro_MacProjector.H>
 
 void mac_project_velocity(amrex::Array<amrex::MultiFab,AMREX_SPACEDIM>& vel, const amrex::Geometry& geom, int use_hypre)
 {
-    using namespace amrex; 
+    using namespace amrex;
 
     LPInfo lp_info;
 
     // If we want to use hypre to solve the full problem we need to not coarsen inside AMReX
-    if (use_hypre) 
+    if (use_hypre)
         lp_info.setMaxCoarseningLevel(0);
 
     Array<MultiFab,AMREX_SPACEDIM> beta;
@@ -17,7 +17,7 @@ void mac_project_velocity(amrex::Array<amrex::MultiFab,AMREX_SPACEDIM>& vel, con
         beta[idim].setVal(1.0);
     }
 
-    MacProjector macproj({amrex::GetArrOfPtrs(vel)},       // mac velocity
+    Hydro::MacProjector macproj({amrex::GetArrOfPtrs(vel)},       // mac velocity
                          MLMG::Location::FaceCenter,       // velocity located on face centers
                          {amrex::GetArrOfConstPtrs(beta)}, // beta
                          MLMG::Location::FaceCenter,       // beta located on face centers
@@ -25,8 +25,8 @@ void mac_project_velocity(amrex::Array<amrex::MultiFab,AMREX_SPACEDIM>& vel, con
                          {geom},
                          lp_info);                          // structure for passing info to the operator
 
-        // Set bottom-solver to use hypre instead of native BiCGStab 
-        if (use_hypre) 
+        // Set bottom-solver to use hypre instead of native BiCGStab
+        if (use_hypre)
            macproj.getMLMG().setBottomSolver(MLMG::BottomSolver::hypre);
 
         macproj.setDomainBC({AMREX_D_DECL(LinOpBCType::Neumann,

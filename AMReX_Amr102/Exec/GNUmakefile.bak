@@ -1,0 +1,49 @@
+AMREX_HOME ?= ../../..
+TOP   = ../
+
+USE_MPI  = TRUE
+USE_OMP  = FALSE
+
+COMP = gnu
+
+#DIM = 2
+DIM = 3
+
+DEBUG = FALSE
+
+USE_EB = TRUE
+USE_PARTICLES = TRUE
+
+USE_HYPRE = TRUE
+USE_HYPRE = FALSE
+
+BL_NO_FORT = TRUE
+
+include $(AMREX_HOME)/Tools/GNUMake/Make.defs
+
+#include ./Make.Amr
+include $(TOP)/Source/Make.package
+
+Pdirs 	:= AmrCore Base Boundary EB LinearSolvers/MLMG Particle
+
+Ppack	+= $(foreach dir, $(Pdirs), $(AMREX_HOME)/Src/$(dir)/Make.package)
+Ppack	+= $(AMREX_HYDRO_HOME)/Projections/Make.package)
+
+include $(Ppack)
+
+Bdirs := AmrCore Base Boundary EB
+
+Blocs := $(foreach dir, $(Bdirs), $(AMREX_HOME)/Src/$(dir))
+Blocs += $(AMREX_HYDRO_HOME)/Projections
+
+INCLUDE_LOCATIONS += $(Blocs)
+VPATH_LOCATIONS   += $(Blocs)
+
+
+#all: $(executable)
+#	@echo SUCCESS
+
+include $(AMREX_HOME)/Tools/GNUMake/Make.rules
+
+#movie:
+#	ffmpeg -framerate 10 -pattern_type glob -i "p*.png" -r 5 -vf scale=1024:-1 amr102.gif

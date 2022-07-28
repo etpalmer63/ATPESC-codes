@@ -1,6 +1,6 @@
 # based on traces generated using paraview version 5.8.0
 #
-# To ensure correct image size when batch processing, please search 
+# To ensure correct image size when batch processing, please search
 # for and uncomment the line `# renderView*.ViewSize = [*,*]`
 
 #### import the simple module from the paraview
@@ -145,7 +145,7 @@ def generate_movie_3D(AllPlotFiles):
     phiLUTColorBar = GetScalarBar(phiLUT, renderView1)
 
     # change scalar bar placement
-    phiLUTColorBar.WindowLocation = 'AnyLocation'
+    phiLUTColorBar.WindowLocation = 'Any Location'
     phiLUTColorBar.Position = [0, 0.75]
     phiLUTColorBar.ScalarBarLength = 0.2
 
@@ -253,7 +253,7 @@ def generate_movie_3D(AllPlotFiles):
         real_comp3LUTColorBar = GetScalarBar(real_comp3LUT, renderView1)
 
         # change scalar bar placement
-        real_comp3LUTColorBar.WindowLocation = 'AnyLocation'
+        real_comp3LUTColorBar.WindowLocation = 'Any Location'
         real_comp3LUTColorBar.Position = [0, 0.4]
         real_comp3LUTColorBar.ScalarBarLength = 0.2
 
@@ -595,4 +595,4 @@ if __name__ == "__main__":
         output_movie_base, output_movie = generate_movie_2D(PlotFiles)
 
     # convert the avi movie into an animated gif
-    convert_avi_to_gif(output_movie_base, output_movie)
+    # convert_avi_to_gif(output_movie_base, output_movie)

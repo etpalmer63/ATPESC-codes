@@ -32,7 +32,7 @@ FluidParticleContainer::InitParticles(const MultiFab& phi, const MultiFab& ebvol
     // or where density < density_cutoff
     RemoveCoveredParticles(ebvol, density_cutoff);
 
-    // Redistribute to remove the EB-covered particles based on the invalid IDs 
+    // Redistribute to remove the EB-covered particles based on the invalid IDs
     Redistribute();
 }
 
@@ -100,7 +100,7 @@ FluidParticleContainer::AdvectWithUmac (MultiFab* umac, int lev, Real dt)
 
 
 	    umac_pointer[i] = raii_umac[i].get();
-	    umac_pointer[i]->copy(umac[i],0,0,umac[i].nComp(),ng,ng);
+	    umac_pointer[i]->ParallelCopy(umac[i],0,0,umac[i].nComp(),ng,ng);
         }
     }
 
@@ -219,7 +219,7 @@ FluidParticleContainer::DepositToMesh (MultiFab& phi, int interpolation)
 
         // Add up the number of physical particles represented by our particle weights to the grid
         // and divide by the cell volume to get the number density on the grid.
-        for (int kk = AMREX_D_PICK(1, 1, 0); kk <= 1; ++kk) { 
+        for (int kk = AMREX_D_PICK(1, 1, 0); kk <= 1; ++kk) {
         for (int jj = AMREX_D_PICK(1, 0, 0); jj <= 1; ++jj) {
         for (int ii = 0; ii <= 1; ++ii) {
             amrex::Gpu::Atomic::Add(&phi_arr(i+ii-1, j+jj-1, k+kk-1), sx[ii]*sy[jj]*sz[kk] * p.rdata(PIdx::Weight) * inv_cell_volume);
@@ -283,7 +283,7 @@ FluidParticleContainer::InterpolateFromMesh (const MultiFab& phi, int interpolat
         // Step 1: interpolate number density phi using the particle shape factor for CIC or NGP
         amrex::Real interpolated_phi = 0.0;
 
-        for (int kk = AMREX_D_PICK(1, 1, 0); kk <= 1; ++kk) { 
+        for (int kk = AMREX_D_PICK(1, 1, 0); kk <= 1; ++kk) {
         for (int jj = AMREX_D_PICK(1, 0, 0); jj <= 1; ++jj) {
         for (int ii = 0; ii <= 1; ++ii) {
             interpolated_phi += sx[ii]*sy[jj]*sz[kk] * phi_arr(i+ii-1,j+jj-1,k+kk-1);
@@ -295,7 +295,7 @@ FluidParticleContainer::InterpolateFromMesh (const MultiFab& phi, int interpolat
 }
 
 //
-// Remove particles covered by the embedded geometry 
+// Remove particles covered by the embedded geometry
 //
 void
 FluidParticleContainer::RemoveCoveredParticles (const MultiFab& ebvol, const Real density_cutoff)

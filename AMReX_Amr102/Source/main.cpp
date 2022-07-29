@@ -21,7 +21,7 @@ using namespace amrex;
 
 extern void make_eb_cylinder(const Geometry& geom);
 extern void define_velocity(const Real time, const Geometry& geo, Array<MultiFab,AMREX_SPACEDIM>& vel_out, const MultiFab& phi);
-extern void mac_project_velocity(Array<MultiFab,AMREX_SPACEDIM>& vel_out, const Geometry& geom, int use_hypre); 
+extern void mac_project_velocity(Array<MultiFab,AMREX_SPACEDIM>& vel_out, const Geometry& geom, int use_hypre);
 
 Real est_time_step(const Real current_dt, const Geometry& geom, Array<MultiFab,AMREX_SPACEDIM>& vel, const Real cfl)
 {
@@ -51,18 +51,18 @@ Real est_time_step(const Real current_dt, const Geometry& geom, Array<MultiFab,A
     return dt_est;
 }
 
-void write_plotfile(int step, Real time, const Geometry& geom, MultiFab& plotmf, 
+void write_plotfile(int step, Real time, const Geometry& geom, MultiFab& plotmf,
                     FluidParticleContainer& pc, int write_ascii)
 {
     // Copy processor id into the component of plotfile_mf immediately following velocities
-    int proc_comp = AMREX_SPACEDIM; 
+    int proc_comp = AMREX_SPACEDIM;
     for (MFIter mfi(plotmf); mfi.isValid(); ++mfi)
        plotmf[mfi].setVal<RunOn::Host>(ParallelDescriptor::MyProc(),mfi.validbox(),proc_comp,1);
 
     std::stringstream sstream;
     sstream << "plt" << std::setw(5) << std::setfill('0') << step;
     std::string plotfile_name = sstream.str();
-    
+
 #if (AMREX_SPACEDIM == 2)
        EB_WriteSingleLevelPlotfile(plotfile_name, plotmf,
                                    { "xvel", "yvel", "proc", "phi" },
@@ -73,7 +73,8 @@ void write_plotfile(int step, Real time, const Geometry& geom, MultiFab& plotmf,
                                      geom, time, 0);
 #endif
 
-    pc.Checkpoint(plotfile_name, "particles", true); // Write particles to plotfile
+    //pc.Checkpoint(plotfile_name, "particles", true); // Write particles to plotfile
+    pc.WritePlotFile(plotfile_name, "particles"); // Write particles to plotfile
 
     std::stringstream pstream;
     pstream << "part" << std::setw(5) << std::setfill('0') << step;
@@ -95,7 +96,7 @@ int main (int argc, char* argv[])
     Real strt_time = amrex::second();
     Real eb_strt_time;
     Real eb_stop_time;
-    
+
     {
         int n_cell = 128;
         int max_grid_size = 32;
@@ -132,7 +133,7 @@ int main (int argc, char* argv[])
         }
 
 #ifndef AMREX_USE_HYPRE
-        if (use_hypre == 1) 
+        if (use_hypre == 1)
            amrex::Abort("Cant use hypre if we dont build with USE_HYPRE=TRUE");
 #endif
 
@@ -209,7 +210,7 @@ int main (int argc, char* argv[])
 
         // store plotfile variables; velocity, processor id, and phi (the EB writer appends volfrac)
         plotfile_mf.define(grids, dmap, AMREX_SPACEDIM+2, 0, MFInfo(), *factory);
-        
+
         // make a separate phi MultiFab for the particle-mesh operations because we need a ghost cell
         phi_mf.define(grids, dmap, 1, 1, MFInfo(), *factory);
 
@@ -233,7 +234,7 @@ int main (int argc, char* argv[])
             amrex::ParallelFor(bx,
             [=] AMREX_GPU_DEVICE (int i, int j, int k)
             {
-                Real x = plo[0] + (0.5+i) * dx[0]; 
+                Real x = plo[0] + (0.5+i) * dx[0];
                 Real y = plo[1] + (0.5+j) * dx[1];
 
                 Real r2 = (pow(x-0.5, 2) + pow(y-0.75,2)) / 0.01;
@@ -282,7 +283,7 @@ int main (int argc, char* argv[])
                      vel[2].setVal(0.0););
 
 #if (AMREX_SPACEDIM == 3)
-        if (write_eb_geom) 
+        if (write_eb_geom)
         {
             amrex::Print() << "Writing EB surface" << std::endl;
             WriteEBSurface (grids, dmap, geom, ebfact);

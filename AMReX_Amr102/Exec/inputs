@@ -1,4 +1,4 @@
-max_step  = 200
+max_step  = 250
 stop_time = 2.0
 
 n_cell    = 64                           # number of cells in x- and y-directions; z-dir has 1/8 n_cell
@@ -25,8 +25,8 @@ write_initial_phi = 0
 
 mac_proj.verbose = 0
 mac_proj.bottom_verbose = 0
- 
-use_hypre = 0                            # use hypre instead of native GMG to solve the problem  
+
+use_hypre = 0                            # use hypre instead of native GMG to solve the problem
 
 ###############################################
 # Specify the location and size of the cylinder

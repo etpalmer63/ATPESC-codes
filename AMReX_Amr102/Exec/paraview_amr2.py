@@ -82,6 +82,12 @@ def create_single_image(pltfile_name, image_prefix):
   # get opacity transfer function/opacity map for 'phi'
   phiPWF = GetOpacityTransferFunction('phi')
 
+  # Rescale transfer function
+  phiLUT.RescaleTransferFunction(-1.0, 1.5)
+
+  # Rescale transfer function
+  phiPWF.RescaleTransferFunction(-1.0, 1.5)
+
   # create a new 'Slice'
   slice1 = Slice(registrationName='Slice1', Input=plt00050)
   slice1.SliceType = 'Plane'
@@ -277,7 +283,7 @@ def create_single_image(pltfile_name, image_prefix):
   phiLUTColorBar = GetScalarBar(phiLUT, renderView1)
 
   # change scalar bar placement
-  phiLUTColorBar.WindowLocation = 'Any Location'
+  phiLUTColorBar.WindowLocation = 'AnyLocation'
   phiLUTColorBar.Position = [0.8640054127198917, 0.12100611828687968]
   phiLUTColorBar.ScalarBarLength = 0.33
 

@@ -386,7 +386,7 @@ def generate_movie_2D(AllPlotFiles):
     phiLUTColorBar = GetScalarBar(phiLUT, renderView1)
 
     # change scalar bar placement
-    phiLUTColorBar.WindowLocation = 'AnyLocation'
+    phiLUTColorBar.WindowLocation = 'Any Location'
     phiLUTColorBar.Position = [0, 0.75]
     phiLUTColorBar.ScalarBarLength = 0.2
 
@@ -500,7 +500,7 @@ def generate_movie_2D(AllPlotFiles):
         real_comp2LUTColorBar = GetScalarBar(real_comp2LUT, renderView1)
 
         # change scalar bar placement
-        real_comp2LUTColorBar.WindowLocation = 'AnyLocation'
+        real_comp2LUTColorBar.WindowLocation = 'Any Location'
         real_comp2LUTColorBar.Position = [0, 0.4]
         real_comp2LUTColorBar.ScalarBarLength = 0.2
 
